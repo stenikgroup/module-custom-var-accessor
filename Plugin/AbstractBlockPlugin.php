@@ -30,23 +30,36 @@ class AbstractBlockPlugin
     /**
      * @param AbstractBlock $abstractBlock
      * @param callable $proceed
-     * @param $name
+     * @param $code
      * @param null $module
      * @return string|false
      */
-    public function aroundGetVar(AbstractBlock $abstractBlock, callable $proceed, $name, $module = null)
+    public function aroundGetVar(AbstractBlock $abstractBlock, callable $proceed, $code, $module = null)
     {
-        if ($module == 'customVarHtml')
-            return $this->variable->loadByCode($name)->getHtmlValue();
+        if ($module == 'customVarHtml' && $this->getCustomVarByCode($code))
+            return $this->variable->getHtmlValue();
 
-        if ($module == 'customVarText')
-            return $this->variable->loadByCode($name)->getPlainValue();
+        if ($module == 'customVarText' && $this->getCustomVarByCode($code))
+            return $this->variable->getPlainValue();
 
-        if ($module == 'customVarName')
-            return $this->variable->loadByCode($name)->getName();
+        if ($module == 'customVarName' && $this->getCustomVarByCode($code))
+            return $this->variable->getName();
 
-        return $proceed($name, $module);
+        return $proceed($code, $module);
 
+    }
+
+    /**
+     * @param $code
+     * @return boolean
+     */
+    protected function getCustomVarByCode($code)
+    {
+        if ($result = $this->variable->getResource()->getVariableByCode($code, true, $this->variable->getStoreId())) {
+            $this->variable->setData($result);
+            return true;
+        }
+        return false;
     }
 
 
