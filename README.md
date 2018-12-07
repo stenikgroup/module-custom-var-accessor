@@ -1,0 +1,1 @@
+Stenik\CustomVarAccessor module provides the ability to access custom var from every phtml template.

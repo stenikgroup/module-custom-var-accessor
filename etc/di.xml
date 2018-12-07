@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\View\Element\AbstractBlock">
+        <plugin name="Stenik_Abstract_Block_Plugin"
+                type="Stenik\CustomVarAccessor\Plugin\AbstractBlockPlugin"
+                sortOrder="1"
+                disabled="false"/>
+    </type>
+</config>
