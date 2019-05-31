@@ -36,14 +36,23 @@ class AbstractBlockPlugin
      */
     public function aroundGetVar(AbstractBlock $abstractBlock, callable $proceed, $code, $module = null)
     {
-        if ($module == 'customVarHtml' && $this->getCustomVarByCode($code))
+        if ($module == 'customVarHtml' && $this->getCustomVarByCode($code)) {
+            if ($this->variable->getStoreHtmlValue()) {
+                return $this->variable->getStoreHtmlValue();
+            }
             return $this->variable->getHtmlValue();
+        }
 
-        if ($module == 'customVarText' && $this->getCustomVarByCode($code))
+        if ($module == 'customVarText' && $this->getCustomVarByCode($code)) {
+            if ($this->variable->getStorePlainValue()) {
+                return $this->variable->getStorePlainValue();
+            }
             return $this->variable->getPlainValue();
+        }
 
-        if ($module == 'customVarName' && $this->getCustomVarByCode($code))
+        if ($module == 'customVarName' && $this->getCustomVarByCode($code)) {
             return $this->variable->getName();
+        }
 
         return $proceed($code, $module);
 
