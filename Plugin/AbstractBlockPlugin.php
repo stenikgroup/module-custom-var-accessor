@@ -2,6 +2,7 @@
 
 namespace Stenik\CustomVarAccessor\Plugin;
 
+use Magento\Store\Model\StoreManagerInterface;
 use Magento\Variable\Model\Variable;
 use Magento\Framework\View\Element\AbstractBlock;
 
@@ -19,12 +20,18 @@ class AbstractBlockPlugin
     protected $variable;
 
     /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
      * AbstractBlockPlugin constructor
      * @param Variable $variable
      */
-    public function __construct(Variable $variable)
+    public function __construct(Variable $variable, StoreManagerInterface $storeManager)
     {
-        $this->variable = $variable;
+        $this->variable     = $variable;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -64,12 +71,21 @@ class AbstractBlockPlugin
      */
     protected function getCustomVarByCode($code)
     {
-        if ($result = $this->variable->getResource()->getVariableByCode($code, true, $this->variable->getStoreId())) {
+        if ($result = $this->variable->getResource()->getVariableByCode($code, true, $this->getStoreId())) {
             $this->variable->setData($result);
             return true;
         }
         return false;
     }
 
+    /**
+     * Get store identifier
+     *
+     * @return  int
+     */
+    protected function getStoreId()
+    {
+        return $this->storeManager->getStore()->getId();
+    }
 
 }
